@@ -1,7 +1,15 @@
 ﻿namespace StudioLaValse.Geometry
 {
+    /// <summary>
+    /// Extensions for colors.
+    /// </summary>
     public static class ColorExtensions
     {
+        /// <summary>
+        /// Average colors from their respective circular position.
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <returns></returns>
         public static ColorHSB Average(this IEnumerable<ColorHSB> colors)
         {
             var count = colors.Count();

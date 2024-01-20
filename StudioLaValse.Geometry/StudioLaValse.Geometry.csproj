@@ -10,6 +10,7 @@
 	<!--build-->
 	<PropertyGroup>
 		<EnablePackageValidation>true</EnablePackageValidation>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

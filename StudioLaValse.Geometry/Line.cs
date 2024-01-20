@@ -1,10 +1,24 @@
 ﻿namespace StudioLaValse.Geometry
 {
+    /// <summary>
+    /// Represents an immutable line.
+    /// </summary>
     public class Line
     {
+        /// <summary>
+        /// The start point.
+        /// </summary>
         public XY Start { get; }
+        /// <summary>
+        /// The end point.
+        /// </summary>
         public XY End { get; }
 
+        /// <summary>
+        /// Construct a line from two points.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         public Line(XY start, XY end)
         {
             Start = start;
@@ -12,6 +26,13 @@
             End = end;
         }
 
+        /// <summary>
+        /// Construct a line from coordinates.
+        /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
         public Line(double x1, double y1, double x2, double y2)
         {
             Start = new XY(x1, y1);
@@ -34,6 +55,11 @@
         }
         private static double DistToSegment(XY p, XY v, XY w) { return Math.Sqrt(DistToSegmentSquared(p, v, w)); }
 
+        /// <summary>
+        /// Calculates the smallest distance between the specified point and this line.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public double Distance(XY point)
         {
             return DistToSegment(point, Start, End);

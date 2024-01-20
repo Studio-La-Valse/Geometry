@@ -2,16 +2,44 @@
 
 namespace StudioLaValse.Geometry
 {
+    /// <summary>
+    /// Represents an immutable color using red, green and blue values.
+    /// Values range from 0 to and including 255.
+    /// </summary>
     public class ColorRGB
     {
+        /// <summary>
+        /// The max value.
+        /// </summary>
         public const int MaxValue = 255;
+        /// <summary>
+        /// White.
+        /// </summary>
         public static ColorRGB White = new ColorRGB(MaxValue, MaxValue, MaxValue);
+        /// <summary>
+        /// Black.
+        /// </summary>
         public static ColorRGB Black = new ColorRGB(0, 0, 0);
 
+        /// <summary>
+        /// The value of the red channel.
+        /// </summary>
         public int Red { get; }
+        /// <summary>
+        /// The value of the green channel.
+        /// </summary>
         public int Green { get; }
+        /// <summary>
+        /// The value of the blue channel.
+        /// </summary>
         public int Blue { get; }
 
+        /// <summary>
+        /// Construct a color from red green an blue values.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
         public ColorRGB(int r, int g, int b)
         {
             Red = MathUtils.Clamp(r, 0, MaxValue);
@@ -19,6 +47,11 @@ namespace StudioLaValse.Geometry
             Blue = MathUtils.Clamp(b, 0, MaxValue);
         }
 
+        /// <summary>
+        /// Construct a ColorRGB from a <see cref="ColorHSB"/>.
+        /// </summary>
+        /// <param name="hsb"></param>
+        /// <returns></returns>
         public static ColorRGB FromHSB(ColorHSB hsb)
         {
             double r, g, b;
@@ -51,6 +84,11 @@ namespace StudioLaValse.Geometry
             return p;
         }
 
+        /// <summary>
+        /// Returns true if any of the red green and blue channels differ from the other color.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool IsDifferent(ColorRGB other)
         {
             if (other is null)
@@ -71,6 +109,10 @@ namespace StudioLaValse.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Cast a <see cref="ColorRGB"/> to a <see cref="ColorHSB"/>
+        /// </summary>
+        /// <param name="rgb"></param>
         public static implicit operator ColorHSB(ColorRGB rgb) => ColorHSB.FromRGB(rgb);
     }
 }
