@@ -133,6 +133,17 @@
 
             return value;
         }
+        public static int ForcePositiveModulo(int value, int max)
+        {
+            while (value < 0)
+            {
+                value += max;
+            }
+
+            value %= max;
+
+            return value;
+        }
         public static uint UnsignedModulo(int value, uint max)
         {
             while (value < 0)

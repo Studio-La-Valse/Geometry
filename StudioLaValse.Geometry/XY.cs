@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents an immutable coordinate.
     /// </summary>
-    public class XY
+    public readonly struct XY
     {
         /// <summary>
         /// The X-coordinate.
@@ -30,19 +30,25 @@
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
-        public static XY Average(List<XY> positions)
+        public static XY Average(IEnumerable<XY> positions)
         {
             var x = 0d;
             var y = 0d;
 
+            var count = 0;
             foreach (var position in positions)
             {
                 x += position.X;
                 y += position.Y;
+                count++;
             }
 
-            x /= positions.Count;
-            y /= positions.Count;
+            if(count == 0)
+            {
+                throw new InvalidOperationException("No points provided.");
+            }
+            x /= count;
+            y /= count;
 
             return new XY(x, y);
         }
@@ -115,9 +121,7 @@
         /// <exception cref="DivideByZeroException"></exception>
         public static XY operator /(XY left, double right)
         {
-            if (right == 0) throw new DivideByZeroException();
-
-            return new XY(left.X / right, left.Y / right);
+            return right.AlmostEqualTo(0) ? throw new DivideByZeroException() : new XY(left.X / right, left.Y / right);
         }
         /// <summary>
         /// Casts the point to a vector and multiplies the length of the vector by the specified value.
@@ -129,9 +133,5 @@
         {
             return new XY(left.X * right, left.Y * right);
         }
-
-
-        //public static implicit operator Point(XY xy) => new Point(xy.X, xy.Y);
-        //public static implicit operator XY(Point point) => new XY(point.X, point.Y);
     }
 }

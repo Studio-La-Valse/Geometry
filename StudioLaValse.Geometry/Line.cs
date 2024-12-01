@@ -1,9 +1,11 @@
-﻿namespace StudioLaValse.Geometry
+﻿using System.Drawing;
+
+namespace StudioLaValse.Geometry
 {
     /// <summary>
     /// Represents an immutable line.
     /// </summary>
-    public class Line
+    public readonly struct Line
     {
         /// <summary>
         /// The start point.
@@ -39,12 +41,18 @@
             End = new XY(x2, y2);
         }
 
-        private static double Sqr(double x) { return x * x; }
-        private static double Dist2(XY v, XY w) { return Sqr(v.X - w.X) + Sqr(v.Y - w.Y); }
+        private static double Sqr(double x) 
+        { 
+            return x * x;
+        }
+        private static double Dist2(XY v, XY w) 
+        { 
+            return Sqr(v.X - w.X) + Sqr(v.Y - w.Y); 
+        }
         private static double DistToSegmentSquared(XY p, XY v, XY w)
         {
             var l2 = Dist2(v, w);
-            if (l2 == 0)
+            if (l2.AlmostEqualTo(0))
             {
                 return Dist2(p, v);
             }
@@ -53,7 +61,10 @@
             t = Math.Max(0, Math.Min(1, t));
             return Dist2(p, new XY(x: v.X + t * (w.X - v.X), y: v.Y + t * (w.Y - v.Y)));
         }
-        private static double DistToSegment(XY p, XY v, XY w) { return Math.Sqrt(DistToSegmentSquared(p, v, w)); }
+        private static double DistToSegment(XY p, XY v, XY w) 
+        { 
+            return Math.Sqrt(DistToSegmentSquared(p, v, w)); 
+        }
 
         /// <summary>
         /// Calculates the smallest distance between the specified point and this line.
@@ -64,5 +75,40 @@
         {
             return DistToSegment(point, Start, End);
         }
+
+        /// <summary>
+        /// Calculates the closest point to the specified point.
+        /// </summary>
+        /// <param name="other">The point to find the closest point to.</param>
+        /// <returns>The closest point on the line segment.</returns>
+        public XY ClosestPoint(XY other)
+        {
+            var dx = End.X - Start.X;
+            var dy = End.Y - Start.Y;
+
+            if (dx.AlmostEqualTo(0) && dy.AlmostEqualTo(0))
+            {
+                // The line segment is just a point
+                return Start;
+            }
+
+            var t = ((other.X - Start.X) * dx + (other.Y - Start.Y) * dy) / (dx * dx + dy * dy);
+
+            if (t <= 0)
+            {
+                // Closest point is the start of the segment
+                return Start;
+            }
+            else if (t >= 1)
+            {
+                // Closest point is the end of the segment
+                return End;
+            }
+
+            // Closest point is on the segment
+            var closestPoint = new XY(Start.X + t * dx, Start.Y + t * dy);
+            return closestPoint;
+        }
+
     }
 }
