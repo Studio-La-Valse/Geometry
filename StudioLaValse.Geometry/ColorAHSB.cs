@@ -1,54 +1,65 @@
 ﻿using StudioLaValse.Geometry.Private;
+using System;
 
 namespace StudioLaValse.Geometry
 {
     /// <summary>
     /// Represents an immutable color using alpha, hue, saturation and brightness values.
     /// </summary>
-    public class ColorAHSB : ColorHSB
-    {
+    public readonly struct ColorAHSV
+    {        
+        /// <summary>
+        /// Hue in degrees.
+        /// </summary>
+        public int Hue { get; }
+        /// <summary>
+        /// Saturation in percentage.
+        /// </summary>
+        public int Saturation { get; }
+        /// <summary>
+        /// Brightness in percentage.
+        /// </summary>
+        public int Value { get; }
         /// <summary>
         /// The alpha of the color.
         /// </summary>
         public double Alpha { get; }
 
         /// <summary>
-        /// Construct an ahsb color from alpha, hue, sat and brightness values.
+        /// Construct an AHSV color from hue, sat and brightness values.
+        /// Alpha defaults to 1.
+        /// </summary>
+        /// <param name="hue"></param>
+        /// <param name="sat"></param>
+        /// <param name="bri"></param>
+        public ColorAHSV(int hue, int sat, int bri) 
+        {
+            Hue = MathUtils.ForcePositiveModulo(hue, 360);
+
+            Saturation = MathUtils.Clamp(sat, 0, 100);
+
+            Value = MathUtils.Clamp(bri, 0, 100);
+
+            Alpha = 1;
+        }
+
+        /// <summary>
+        /// Construct an AHSV color from alpha, hue, sat and brightness values.
         /// </summary>
         /// <param name="alpha"></param>
         /// <param name="hue"></param>
         /// <param name="sat"></param>
         /// <param name="bri"></param>
-        public ColorAHSB(double alpha, double hue, double sat, double bri) : base(hue, sat, bri)
+        public ColorAHSV(double alpha, int hue, int sat, int bri)
         {
-            Alpha = MathUtils.Clamp(alpha, 0, MaxValue);
-        }
+            Hue = MathUtils.ForcePositiveModulo(hue, 360);
 
-        /// <summary>
-        /// Construct an ASHB color from an alpha value and a <see cref="ColorHSB"/> color.
-        /// </summary>
-        /// <param name="alpha"></param>
-        /// <param name="color"></param>
-        public ColorAHSB(double alpha, ColorHSB color) : base(color.Hue, color.Saturation, color.Brightness)
-        {
-            Alpha = MathUtils.Clamp(alpha, 0, MaxValue);
-        }
+            Saturation = MathUtils.Clamp(sat, 0, 100);
 
-        /// <summary>
-        /// Construct a new AHSB color by setting the alpha on this instance.
-        /// </summary>
-        /// <param name="alpha"></param>
-        /// <returns></returns>
-        public ColorAHSB SetAlpha(double alpha)
-        {
-            return new ColorAHSB(alpha, Hue, Saturation, Brightness);
-        }
+            Value = MathUtils.Clamp(bri, 0, 100);
 
-        /// <summary>
-        /// Implicitly cast an AHSB color to a <see cref="ColorARGB"/>.
-        /// </summary>
-        /// <param name="ahsb"></param>
-        public static implicit operator ColorARGB(ColorAHSB ahsb) => new ColorARGB((int)(ahsb.Alpha * ColorRGB.MaxValue), ahsb as ColorHSB);
+            Alpha = MathUtils.Clamp(alpha, 0, 1);
+        }
     }
 }
 
